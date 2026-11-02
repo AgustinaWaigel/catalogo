@@ -1,0 +1,28 @@
+import { CONTACTO_MARCA } from "./marca";
+
+/* Datos de contacto: salen de CONTACTO_WHATSAPP, CONTACTO_EMAIL, CONTACTO_INSTAGRAM y CONTACTO_TIKTOK
+   (rubros/<rubro>.env). El WhatsApp va con código de país y sin signos: 54 9 + característica + número. */
+export const CONTACTO = CONTACTO_MARCA;
+
+export const enlaceWhatsApp = (texto: string) =>
+  `https://wa.me/${CONTACTO.whatsapp}?text=${encodeURIComponent(texto)}`;
+
+/* Cuánto lleva preparar un pedido con productos físicos. Se muestra antes de pagar, en el seguimiento, en el mail
+   de confirmación, en las preguntas frecuentes y en los términos: si cambia, cambia en todos lados. */
+export const PLAZO_TALLER =
+  "Todo lo hacemos a mano: si lo que pediste no está en stock, prepararlo nos lleva de 2 a 15 días hábiles, según el pedido. Después sale el envío (o te avisamos para que lo retires).";
+
+/* Para quién es un pedido por mayor (el formulario de /pedidos-por-mayor y el panel de presupuestos). */
+export const TIPOS_PRESUPUESTO: [tipo: string, nombre: string][] = [
+  ["emprendimiento", "Emprendimiento"],
+  ["escuela", "Escuela o docente"],
+  ["evento", "Evento o souvenirs"],
+  ["otro", "Otro"],
+];
+
+export const enlaceInstagram =`https://instagram.com/${CONTACTO.instagram}`;
+
+export const enlaceTiktok = `https://www.tiktok.com/@${CONTACTO.tiktok}`;
+
+const formato = new Intl.NumberFormat("es-AR");
+export const precio = (pesos: number) => `$ ${formato.format(pesos)}`;
