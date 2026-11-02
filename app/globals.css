@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "../marca/tokens.css";
 @import "./sitio.css" layer(components);
+@import "./estilos.css" layer(components);
 
 /* El tema de Tailwind es la marca y nada más: cada utilidad apunta a una variable de
    marca/tokens.css. Así `bg-halo`, `font-titulo`, `text-etiqueta`, `rounded-m`, `shadow-sello`

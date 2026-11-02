@@ -382,6 +382,10 @@ a:hover { color: var(--color-tinta); }
 .ilustracion--logo .isotipo--inicial text { fill: var(--color-amanecer-fuerte); }
 .ilustracion--logo .isotipo__ala, .ilustracion--logo .isotipo__halo { fill: var(--color-amanecer-fuerte); }
 .portada__grilla--sola { grid-template-columns: 1fr !important; min-height: 0 !important; }
+/* El logo como dibujo de portada, más chico en el celular: que no empuje el texto fuera de la pantalla. */
+@media (max-width: 52rem) {
+  .portada__dibujo:has(.ilustracion--logo) { max-width: 11rem; justify-self: start; }
+}
 
 
 /* ---------- Portada de páginas internas ---------- */
@@ -516,6 +520,8 @@ a:hover { color: var(--color-tinta); }
 .il .fa { fill: var(--color-amanecer); }
 .il .fm { fill: var(--color-menta); }
 .il .fs { fill: var(--color-cielo); }
+/* Producto sin foto en cualquier rubro (PRODUCTO_SIN_FOTO="inicial"): la inicial sobre el color del producto. */
+.il--inicial text { fill: color-mix(in srgb, var(--c) 55%, var(--color-tinta)); font-family: var(--fuente-titulo); font-size: 96px; font-weight: 800; opacity: 0.9; }
 
 /* ---------- Página de producto ---------- */
 

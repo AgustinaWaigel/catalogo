@@ -93,23 +93,53 @@ export const COLORES = {
   "menta-suave": process.env.COLOR_TERCIARIO_SUAVE || "#D5EEDF", // COLOR_TERCIARIO_SUAVE
 };
 
+/* Los estilos de diseño (ESTILO_DISENO). Cada uno es un paquete: cambia la forma de las piezas en el CSS
+   (app/estilos.css) y trae sus propios valores para radios, línea, sombra, patrón y mayúsculas. Cualquiera
+   de esos valores se puede pisar con su variable (ESTILO_RADIO, ESTILO_SOMBRA, TITULOS_MAYUSCULAS…).
+   - artesanal: el de Alas de Ángel. Bordes marcados, sombra de sello, cintas, papelitos torcidos, notas a mano.
+   - moderno: limpio y suave. Sin bordes de dibujo ni giros, sombras difusas, esquinas redondeadas.
+   - minimalista: casi sin decoración. Portada clara, líneas finas, sin sombras.
+   - audaz: bloques de color planos, bordes gruesos, sombra dura, todo recto. */
+export const DISENOS = ["artesanal", "moderno", "minimalista", "audaz"] as const;
+export type Diseno = (typeof DISENOS)[number];
+
+const PAQUETES: Record<
+  Diseno,
+  { radios: [string, string, string, string]; linea: string; sombra: string; desplazamiento: string; patron: boolean; mayusculas: boolean }
+> = {
+  artesanal: { radios: ["6px", "14px", "28px", "999px"], linea: "1.5px", sombra: "sello", desplazamiento: "4px", patron: true, mayusculas: true },
+  moderno: { radios: ["8px", "16px", "24px", "999px"], linea: "1px", sombra: "suave", desplazamiento: "4px", patron: false, mayusculas: false },
+  minimalista: { radios: ["2px", "4px", "6px", "4px"], linea: "1px", sombra: "ninguna", desplazamiento: "0px", patron: false, mayusculas: false },
+  audaz: { radios: ["0px", "0px", "0px", "0px"], linea: "3px", sombra: "sello", desplazamiento: "6px", patron: false, mayusculas: true },
+};
+
+const pedido = (process.env.ESTILO_DISENO || "artesanal").trim().toLowerCase() as Diseno;
+export const DISENO: Diseno = DISENOS.includes(pedido) ? pedido : "artesanal";
+const paquete = PAQUETES[DISENO];
+const opcional = (valor: string | undefined) => (valor && valor.trim() ? valor : undefined);
+
 export const FUENTES = {
-  titulos: process.env.FUENTE_TITULOS || "Londrina Solid",
-  texto: process.env.FUENTE_TEXTO || "Karla",
-  etiquetas: process.env.FUENTE_ETIQUETAS || process.env.FUENTE_TEXTO || "Karla",
+  titulos: process.env.FUENTE_TITULOS || "Inter",
+  texto: process.env.FUENTE_TEXTO || "Inter",
+  etiquetas: process.env.FUENTE_ETIQUETAS || process.env.FUENTE_TEXTO || "Inter",
   mano: process.env.FUENTE_MANO || "",
-  mayusculas: si(process.env.TITULOS_MAYUSCULAS ?? "si"),
+  mayusculas: opcional(process.env.TITULOS_MAYUSCULAS) ? si(process.env.TITULOS_MAYUSCULAS) : paquete.mayusculas,
   escala: Number(process.env.TEXTO_ESCALA) > 0 ? Number(process.env.TEXTO_ESCALA) : 1,
 };
 
 export const ESTILO = {
-  radioChico: process.env.ESTILO_RADIO_CHICO || "6px",
-  radio: process.env.ESTILO_RADIO || "14px",
-  radioGrande: process.env.ESTILO_RADIO_GRANDE || "28px",
-  radioPastilla: process.env.ESTILO_RADIO_PASTILLA || "999px",
-  linea: process.env.ESTILO_LINEA || "1.5px",
-  sombra: (process.env.ESTILO_SOMBRA || "sello").toLowerCase(),
-  desplazamiento: process.env.ESTILO_SOMBRA_DESPLAZAMIENTO || "4px",
-  patron: si(process.env.ESTILO_PATRON ?? "si"),
+  diseno: DISENO,
+  radioChico: process.env.ESTILO_RADIO_CHICO || paquete.radios[0],
+  radio: process.env.ESTILO_RADIO || paquete.radios[1],
+  radioGrande: process.env.ESTILO_RADIO_GRANDE || paquete.radios[2],
+  radioPastilla: process.env.ESTILO_RADIO_PASTILLA || paquete.radios[3],
+  linea: process.env.ESTILO_LINEA || paquete.linea,
+  sombra: (process.env.ESTILO_SOMBRA || paquete.sombra).toLowerCase(),
+  desplazamiento: process.env.ESTILO_SOMBRA_DESPLAZAMIENTO || paquete.desplazamiento,
+  patron: opcional(process.env.ESTILO_PATRON) ? si(process.env.ESTILO_PATRON) : paquete.patron,
   ancho: process.env.ESTILO_ANCHO || "72rem",
 };
+
+/* Qué se ve en un producto sin foto: "dibujo" (los dibujos de papelería de lib/productos.tsx) o "inicial"
+   (la primera letra del nombre sobre el color del producto, sirve para cualquier rubro). */
+export const SIN_FOTO = (process.env.PRODUCTO_SIN_FOTO || (process.env.RUBRO === "papeleria" ? "dibujo" : "inicial")).toLowerCase();

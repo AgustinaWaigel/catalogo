@@ -73,7 +73,7 @@ export function TablaProductos({ productos }: { productos: ProductoAdmin[] }) {
                         // eslint-disable-next-line @next/next/no-img-element -- miniatura chica del panel
                         <img src={p.fotos[0]} alt="" />
                       ) : (
-                        <Dibujo nombre={p.dibujo} color={p.color} />
+                        <Dibujo nombre={p.dibujo} color={p.color} texto={p.nombre} />
                       )}
                     </span>
                     <span>

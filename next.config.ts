@@ -1,39 +1,49 @@
 import type { NextConfig } from "next";
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 
 // Las fotos subidas desde el panel se sirven desde Supabase Storage.
 const supabase = process.env.NEXT_PUBLIC_SUPABASE_URL ? new URL(process.env.NEXT_PUBLIC_SUPABASE_URL) : null;
 
 /* ── Multirubro ──
-   RUBRO elige el archivo rubros/<rubro>.env (por defecto, papeleria). Cada variable de ese archivo
-   se puede pisar una por una desde .env.local o desde Vercel. El resultado va en `env`: así llega
-   tanto al servidor como al navegador, sin el prefijo NEXT_PUBLIC_. */
-const RUBRO = (process.env.RUBRO || "papeleria").trim();
+   RUBRO elige el archivo rubros/<rubro>.env. Si no existe (un rubro que no está en la carpeta), se usa
+   rubros/generico.env y la tienda se arma con las variables que pongas en .env.local o en Vercel.
+   Cada variable se puede pisar una por una desde ahí. El resultado va en `env`: así llega tanto al
+   servidor como al navegador, sin el prefijo NEXT_PUBLIC_. */
+const RUBRO = (process.env.RUBRO || "papeleria").trim().toLowerCase();
+const CARPETA = path.join(process.cwd(), "rubros");
 
-function leerRubro(nombre: string): Record<string, string> {
-  const archivo = path.join(process.cwd(), "rubros", `${nombre}.env`);
+function leerRubro(nombre: string): Record<string, string> | null {
   let texto: string;
   try {
-    texto = readFileSync(archivo, "utf8");
+    texto = readFileSync(path.join(CARPETA, `${nombre}.env`), "utf8");
   } catch {
-    throw new Error(`RUBRO="${nombre}": no existe rubros/${nombre}.env`);
+    return null;
   }
   const valores: Record<string, string> = {};
   for (const linea of texto.split(/\r?\n/)) {
     const m = linea.match(/^\s*([A-Z][A-Z0-9_]*)\s*=\s*(.*)\s*$/);
     if (!m) continue;
     let valor = m[2];
-    const comillas = valor.match(/^(["'])(.*)\1$/);
+    const comillas = valor.match(/^(["'])(.*?)\1\s*(#.*)?$/);
     valor = comillas ? comillas[2] : valor.replace(/\s+#.*$/, "");
     valores[m[1]] = valor;
   }
   return valores;
 }
 
-const base = { ...leerRubro("papeleria"), ...(RUBRO === "papeleria" ? {} : leerRubro(RUBRO)) };
+const delRubro = leerRubro(RUBRO) ?? leerRubro("generico") ?? {};
+// Todas las variables que existen en algún rubro (también las comentadas): así se pueden definir desde
+// Vercel aunque el archivo del rubro no las traiga.
+const claves = new Set<string>(Object.keys(delRubro));
+for (const archivo of readdirSync(CARPETA).filter((a) => a.endsWith(".env")))
+  for (const m of readFileSync(path.join(CARPETA, archivo), "utf8").matchAll(/^\s*#?\s*([A-Z][A-Z0-9_]*)=/gm)) claves.add(m[1]);
+
 const marca: Record<string, string> = { RUBRO };
-for (const clave of Object.keys(base)) marca[clave] = process.env[clave] ?? base[clave];
+for (const clave of claves) {
+  const valor = process.env[clave] ?? delRubro[clave];
+  if (valor !== undefined) marca[clave] = valor;
+}
 
 // La página de productos físicos vive en app/(tienda)/papeleria; con otro CATALOGO_RUTA se la sirve en esa dirección.
 const rutaCatalogo = (marca.CATALOGO_RUTA || "papeleria").replace(/^\/+|\/+$/g, "");

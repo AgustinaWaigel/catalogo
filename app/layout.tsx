@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { MARCA } from "@/lib/marca";
+import { ESTILO, MARCA } from "@/lib/marca";
 import { SITIO_URL } from "@/lib/sitio";
 import { cssDelTema, linksDeFuentes } from "@/lib/tema";
 import "./globals.css";
@@ -24,7 +24,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     // data-scroll-behavior: el scroll suave (sitio.css) es para los saltos dentro de una página; al cambiar
     // de página Next lo apaga, así no se ve deslizarse hasta arriba.
-    <html lang="es-AR" data-scroll-behavior="smooth" data-rubro={MARCA.rubroId}>
+    <html lang="es-AR" data-scroll-behavior="smooth" data-rubro={MARCA.rubroId} data-estilo={ESTILO.diseno}>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />

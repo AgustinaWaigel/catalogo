@@ -1,0 +1,136 @@
+/* Los estilos de diseño (ESTILO_DISENO, ver lib/marca.ts). app/sitio.css es el estilo "artesanal" (el de
+   Alas de Ángel); acá se reescriben las piezas para los demás. El atributo data-estilo lo pone app/layout.tsx.
+   Los radios, la línea y la sombra no se tocan acá: los pone lib/tema.ts según el paquete. */
+
+/* ============ Común a moderno, minimalista y audaz: nada de papel ni de mano ============ */
+
+html:not([data-estilo="artesanal"]) {
+  /* La animación de entrada sube derecha, sin girar. */
+  --giro: 0deg;
+}
+
+/* Sin cintas de washi tape, sin giros, sin troquelado de sticker. */
+html:not([data-estilo="artesanal"]) .ficha::before { display: none; }
+html:not([data-estilo="artesanal"]) .ficha:hover { transform: translateY(-3px); }
+html:not([data-estilo="artesanal"]) .papelito { transform: none; }
+html:not([data-estilo="artesanal"]) .sello { rotate: none; }
+html:not([data-estilo="artesanal"]) .asi-lo-usan figure { rotate: none !important; }
+html:not([data-estilo="artesanal"]) .ilustracion--logo .isotipo { rotate: none; }
+html:not([data-estilo="artesanal"]) .ficha__dibujo svg { filter: none; }
+html:not([data-estilo="artesanal"]) .ficha:hover .ficha__dibujo svg { rotate: none; scale: 1.04; }
+
+/* Las líneas punteadas de cuaderno pasan a ser líneas lisas. */
+html:not([data-estilo="artesanal"]) :is(.articulo, .preguntas details, .bolsita__item, .compra__cuentas, .paso__items li, .seguimiento__items li, .admin__tabla td, .admin__mails, .categoria__nueva, .resena--pendiente, .paso--despues, .editor__fotos--nuevas img) {
+  border-style: solid;
+}
+html:not([data-estilo="artesanal"]) :is(.bolsita__o, .enlaces__titulo)::before,
+html:not([data-estilo="artesanal"]) :is(.bolsita__o, .enlaces__titulo)::after { border-top-style: solid; }
+
+/* La nota escrita a mano pasa a ser una etiqueta chica arriba del título. */
+html:not([data-estilo="artesanal"]) .nota-mano {
+  font-family: var(--fuente-etiqueta);
+  font-size: var(--texto-etiqueta);
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+/* La pestaña de los estantes va adentro, como una etiqueta. */
+html:not([data-estilo="artesanal"]) .estante { padding-top: var(--espacio-5); border-radius: var(--radio-l); }
+html:not([data-estilo="artesanal"]) .estante::before {
+  position: static;
+  align-self: flex-start;
+  margin-bottom: var(--espacio-2);
+  padding: 0;
+  background: none;
+  color: inherit;
+  border: 0;
+  opacity: 0.8;
+}
+
+/* La portada, de un solo color (sin resplandor detrás del dibujo). */
+html:not([data-estilo="artesanal"]) .portada { background: var(--color-amanecer); }
+
+/* ============ Moderno: limpio, suave y redondeado ============ */
+
+html[data-estilo="moderno"] {
+  /* Bordes en el color de las líneas, no en el del texto: las piezas se separan por sombra, no por trazo. */
+  --borde: var(--linea) solid var(--color-renglon);
+}
+html[data-estilo="moderno"] .portada,
+html[data-estilo="moderno"] .portadilla { border-bottom: 0; }
+html[data-estilo="moderno"] .portada .resalte { background: none; padding: 0; color: var(--color-halo); }
+html[data-estilo="moderno"] .resalte { background-size: 100% 35%; background-position: left 88%; }
+html[data-estilo="moderno"] .ficha { background: color-mix(in srgb, var(--color-nube) 55%, white); border-color: transparent; }
+html[data-estilo="moderno"] .ficha:hover { box-shadow: var(--sombra-sello-alta); }
+html[data-estilo="moderno"] .boton { border-color: transparent; }
+html[data-estilo="moderno"] .boton:hover { transform: translateY(-1px); }
+html[data-estilo="moderno"] .boton--claro { border-color: currentColor; }
+html[data-estilo="moderno"] .portada .boton { border-color: transparent; }
+html[data-estilo="moderno"] .portada .boton--claro { border-color: color-mix(in srgb, var(--color-nube) 60%, transparent); }
+html[data-estilo="moderno"] .portada .boton:hover { box-shadow: none; }
+html[data-estilo="moderno"] .estante { border-color: transparent; }
+html[data-estilo="moderno"] .estante:hover { transform: translateY(-3px); }
+html[data-estilo="moderno"] .seccion--cielo { background: var(--color-cielo); border-block: 0; }
+html[data-estilo="moderno"] .pasos li::before { border-color: transparent; }
+html[data-estilo="moderno"] .ilustracion--logo .isotipo { filter: drop-shadow(0 24px 40px color-mix(in srgb, black 35%, transparent)); }
+html[data-estilo="moderno"] .portada .nota-mano { color: var(--color-halo); }
+
+/* ============ Minimalista: claro, plano, casi sin decoración ============ */
+
+html[data-estilo="minimalista"] {
+  --borde: var(--linea) solid var(--color-renglon);
+}
+/* La portada y los encabezados, claros: el color queda para los botones. */
+html[data-estilo="minimalista"] :is(.portada, .portadilla) {
+  background: var(--color-cielo);
+  color: var(--color-tinta);
+  border-bottom: var(--borde);
+}
+html[data-estilo="minimalista"] :is(.portada, .portadilla) :is(h1, a) { color: var(--color-tinta); }
+html[data-estilo="minimalista"] :is(.portada, .portadilla) :is(p, .nota-mano) { color: var(--color-tinta-suave); }
+html[data-estilo="minimalista"] .portada .resalte { background: none; padding: 0; color: var(--color-amanecer-fuerte); }
+html[data-estilo="minimalista"] .resalte { background: none; padding: 0; text-decoration: underline; text-decoration-thickness: 0.08em; text-underline-offset: 0.15em; }
+html[data-estilo="minimalista"] .portada .boton { background: var(--color-tinta); color: var(--color-nube); border-color: var(--color-tinta); }
+html[data-estilo="minimalista"] .portada .boton--claro { background: transparent; color: var(--color-tinta); border-color: var(--color-tinta); }
+html[data-estilo="minimalista"] .portada .boton:hover { color: var(--color-nube); box-shadow: none; }
+html[data-estilo="minimalista"] .portada .boton--claro:hover { color: var(--color-tinta); background: var(--color-nube); }
+html[data-estilo="minimalista"] .ilustracion--logo .isotipo { filter: none; }
+html[data-estilo="minimalista"] .ilustracion--logo .isotipo rect { fill: var(--color-amanecer); }
+html[data-estilo="minimalista"] .ilustracion--logo .isotipo--inicial text { fill: var(--color-nube); }
+/* Fichas sin caja: la foto y el texto, nada más. */
+html[data-estilo="minimalista"] .ficha { padding: 0; background: none; border: 0; box-shadow: none; }
+html[data-estilo="minimalista"] .ficha:hover { transform: none; box-shadow: none; }
+html[data-estilo="minimalista"] .ficha:hover h3 a { text-decoration: underline; text-underline-offset: 0.2em; }
+html[data-estilo="minimalista"] .boton:hover { transform: none; box-shadow: none; opacity: 0.85; }
+/* Estantes y bandas, todos del mismo tono. */
+html[data-estilo="minimalista"] .estante,
+html[data-estilo="minimalista"] .estante:nth-child(n) { --fondo: var(--color-cielo); --titulo: var(--color-tinta); --texto: var(--color-tinta); }
+html[data-estilo="minimalista"] .estante:hover { transform: none; box-shadow: none; border-color: var(--color-tinta); }
+html[data-estilo="minimalista"] .seccion--cielo { background: var(--color-cielo); border-block: 0; }
+html[data-estilo="minimalista"] .seccion--cielo .encabezado-seccion h2 { color: var(--color-tinta); }
+html[data-estilo="minimalista"] .pasos li::before { background: none; border: var(--borde); }
+html[data-estilo="minimalista"] .pie { background: var(--color-cielo); color: var(--color-tinta); border-top: var(--borde); }
+html[data-estilo="minimalista"] .pie :is(a, .pie__lema) { color: var(--color-tinta); }
+html[data-estilo="minimalista"] .pie a:hover { color: var(--color-amanecer-fuerte); }
+html[data-estilo="minimalista"] .pie h2 { color: var(--color-tinta-suave); }
+
+/* ============ Audaz: bloques planos, bordes gruesos, sombra dura ============ */
+
+html[data-estilo="audaz"] .portada { border-bottom: var(--borde); }
+html[data-estilo="audaz"] .resalte { background: var(--color-halo); padding: 0 0.15em; }
+/* La etiqueta de arriba del título, como un cartel. */
+html[data-estilo="audaz"] .nota-mano {
+  padding: var(--espacio-1) var(--espacio-3);
+  background: var(--color-halo);
+  color: var(--color-tinta);
+  border: var(--borde);
+  border-radius: var(--radio-pastilla);
+}
+html[data-estilo="audaz"] :is(.portada, .portadilla) .nota-mano { color: var(--color-tinta); }
+html[data-estilo="audaz"] .ficha:hover { transform: translate(-3px, -3px); }
+html[data-estilo="audaz"] .estante:hover { transform: translate(-4px, -4px); }
+html[data-estilo="audaz"] .ilustracion--logo .isotipo { filter: drop-shadow(10px 10px 0 var(--color-tinta)); }
+html[data-estilo="audaz"] .ilustracion--logo .isotipo rect { stroke: var(--color-tinta); stroke-width: 24; }

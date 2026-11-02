@@ -23,7 +23,7 @@
 */
 
 import type { CSSProperties } from "react";
-import { CATALOGO } from "./marca";
+import { CATALOGO, SIN_FOTO } from "./marca";
 
 export type TipoProducto = "fisico" | "descargable" | "pack";
 export type ColorProducto = "lavanda" | "amanecer" | "halo" | "menta";
@@ -253,7 +253,17 @@ export const SECCIONES: Record<TipoProducto, { ruta: string; nombre: string; ent
   pack: { ruta: "/packs-regalo", nombre: "Packs regalo", entrega: "Va en caja, envuelto y con una tarjeta escrita a mano con el mensaje que nos digas." },
 };
 
-export function Dibujo({ nombre, color }: { nombre: NombreDibujo; color: ColorProducto }) {
+/* La imagen de un producto sin foto. Con PRODUCTO_SIN_FOTO="inicial" (lo normal fuera de papelería) es la
+   primera letra del nombre sobre el color del producto; si no, el dibujo de línea. */
+export function Dibujo({ nombre, color, texto }: { nombre: NombreDibujo; color: ColorProducto; texto?: string }) {
+  if (SIN_FOTO === "inicial" && texto)
+    return (
+      <svg className="il il--inicial" viewBox="0 0 200 150" aria-hidden="true" style={{ "--c": `var(--color-${color})` } as CSSProperties}>
+        <text x="100" y="80" textAnchor="middle" dominantBaseline="middle">
+          {texto.trim().charAt(0).toUpperCase()}
+        </text>
+      </svg>
+    );
   return (
     <svg
       className="il"

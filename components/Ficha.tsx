@@ -31,7 +31,7 @@ export function Ficha({ producto: p, orden = 0 }: { producto: Producto; orden?: 
         {p.fotos?.[0] ? (
           <Image src={p.fotos[0]} alt="" fill sizes="(min-width: 52rem) 16rem, 50vw" />
         ) : (
-          <Dibujo nombre={p.dibujo} color={p.color} />
+          <Dibujo nombre={p.dibujo} color={p.color} texto={p.nombre} />
         )}
       </Link>
       {marca && <span className={`sello ${marca.clase}`}>{marca.texto}</span>}

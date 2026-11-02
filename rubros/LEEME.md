@@ -16,6 +16,7 @@ Cada archivo de esta carpeta es un rubro completo: nombre, textos, contacto, col
 | `belleza.env` | Cosmética natural, serif elegante |
 | `mascotas.env` | Pet shop, colores alegres y bordes gruesos |
 | `tecnologia.env` | Accesorios, oscuro con acento lima |
+| `generico.env` | La base neutra para cualquier otro rubro |
 
 En `.env.local` (o en las variables de Vercel) poné:
 
@@ -39,11 +40,35 @@ npm run dev:gastronomia
 npm run rubro -- tecnologia build
 ```
 
-## Un rubro nuevo
+## Un rubro que no está en la lista
 
-1. Copiá `papeleria.env` como `rubros/mi-rubro.env`.
-2. Cambiá los valores (los comentarios explican cada uno).
-3. `RUBRO=mi-rubro` en `.env.local` o en Vercel.
+No hace falta tocar el código. Hay dos caminos:
+
+- **Solo con variables** (lo más rápido, ideal desde Vercel): poné `RUBRO=ferreteria` (o el que sea). Como no
+  existe `rubros/ferreteria.env`, la tienda arranca con `generico.env` y vos completás lo que quieras cambiar:
+  `MARCA_NOMBRE`, `COLOR_PRINCIPAL`, `ESTILO_DISENO`, etc.
+- **Con su propio archivo**: copiá `generico.env` como `rubros/ferreteria.env`, editalo y poné
+  `RUBRO=ferreteria`.
+
+**Categorías, secciones y productos no van en las variables:** cada tienda los carga desde su panel
+(`/admin` → Categorías, Secciones y Productos). Así una ferretería crea "Herramientas", "Bulonería",
+"Pinturas"… y una rotisería "Viandas", "Tartas", "Postres", sin tocar nada más. Los productos sin foto
+muestran la inicial de su nombre sobre su color (`PRODUCTO_SIN_FOTO`).
+
+## Estilos de diseño
+
+`ESTILO_DISENO` cambia la personalidad completa del sitio, más allá de los colores:
+
+| Estilo | Cómo se ve |
+| --- | --- |
+| `artesanal` | El de Alas de Ángel: bordes marcados, sombra de sello, cintas de washi tape en las fichas, papelitos torcidos, notas escritas a mano, patrón dibujado en la portada. |
+| `moderno` | Limpio y suave: sin trazos de dibujo ni giros, bordes casi invisibles, sombras difusas, esquinas redondeadas, notas como etiquetas chicas. |
+| `minimalista` | Casi sin decoración: portada clara, fichas sin caja (foto y texto), líneas finas, sin sombras, todo en un mismo tono. |
+| `audaz` | Bloques de color planos, bordes gruesos, sombra dura y recta, etiquetas tipo cartel. |
+
+Cada estilo trae sus radios, grosor de línea, sombra y mayúsculas; si querés ajustar uno (por ejemplo un
+`moderno` con esquinas rectas) completá `ESTILO_RADIO`, `ESTILO_SOMBRA`, `TITULOS_MAYUSCULAS`, etc. Los
+estilos están en `app/estilos.css`.
 
 ## Qué controla cada grupo de variables
 
@@ -61,7 +86,8 @@ npm run rubro -- tecnologia build
   resaltes y el botón de la portada, con texto en principal fuerte encima).
 - **FUENTE_*** — cualquier familia de Google Fonts, escrita igual que en fonts.google.com. `FUENTE_MANO` vacía
   usa la de etiquetas en cursiva. `TITULOS_MAYUSCULAS` y `TEXTO_ESCALA` ajustan los títulos y el tamaño general.
-- **ESTILO_*** — radios de esquinas, grosor de línea, tipo de sombra (`sello`, `suave`, `ninguna`), el patrón
+- **ESTILO_DISENO** — el estilo de diseño (ver arriba).
+- **ESTILO_*** — ajustes finos del estilo: radios de esquinas, grosor de línea, tipo de sombra (`sello`, `suave`, `ninguna`), el patrón
   dibujado de la portada y el ancho máximo.
 
 Cómo funciona por dentro: `next.config.ts` lee el rubro y lo pasa como `env`; `lib/marca.ts` lo ordena;
@@ -73,7 +99,5 @@ Cómo funciona por dentro: `next.config.ts` lee el rubro y lo pasa como `env`; `
 - **Textos largos**: Sobre nosotras, Preguntas frecuentes y Términos todavía hablan de papelería (con el nombre
   de la tienda ya cambiado). Reescribilos para el rubro nuevo.
 - **"Bolsita"**: el carrito se llama así en todo el sitio.
-- **Dibujos de producto**: los productos sin foto usan dibujos de papelería (`lib/productos.tsx`); en otros
-  rubros conviene cargar fotos desde el panel.
 - **Supabase, Mercado Pago, Gmail y Correo**: cada tienda necesita su propio proyecto y credenciales
   (ver `.env.example` y `supabase/LEEME.md`).

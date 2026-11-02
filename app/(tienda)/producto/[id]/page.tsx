@@ -109,7 +109,7 @@ export default async function PaginaProducto({ params }: PageProps<"/producto/[i
           <div className="producto">
             <div style={{ "--fondo": `var(--color-${p.color}-suave)` } as CSSProperties}>
               <Galeria fotos={p.fotos ?? []} nombre={p.nombre}>
-                <Dibujo nombre={p.dibujo} color={p.color} />
+                <Dibujo nombre={p.dibujo} color={p.color} texto={p.nombre} />
               </Galeria>
             </div>
 
